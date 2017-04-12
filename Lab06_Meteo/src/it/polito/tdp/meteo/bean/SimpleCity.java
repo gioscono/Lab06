@@ -1,3 +1,4 @@
+//elemento base da aggiungere ogni passo alla ricorsione
 package it.polito.tdp.meteo.bean;
 
 public class SimpleCity {

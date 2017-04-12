@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import it.polito.tdp.meteo.bean.CittaMedia;
 import it.polito.tdp.meteo.bean.Rilevamento;
 
 public class MeteoDAO {
@@ -47,6 +48,35 @@ public class MeteoDAO {
 	public Double getAvgRilevamentiLocalitaMese(int mese, String localita) {
 
 		return 0.0;
+	}
+	
+	public List<CittaMedia> getMediaMeteo(int mese){
+		String sql = "select avg(umidita), localita "+
+				     "from situazione "+
+				     "where MONTH(Data)=? "+
+				     "group by localita ";
+		List<CittaMedia> lista = new ArrayList<CittaMedia>();
+		try {
+			Connection conn = DBConnect.getInstance().getConnection();
+			PreparedStatement st = conn.prepareStatement(sql);
+
+			st.setInt(1,mese);
+			ResultSet rs = st.executeQuery();
+
+			while (rs.next()) {
+				CittaMedia c = new CittaMedia(rs.getString("localita"),mese, rs.getFloat("avg(umidita)"));
+				lista.add(c);
+			}
+
+			conn.close();
+			return lista;
+
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
+
 	}
 
 }
